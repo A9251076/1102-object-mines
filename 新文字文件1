@@ -1,0 +1,15 @@
+#include<iostream>
+#include<easyx.h>
+using namespace std;
+
+#define Row 9  //行
+#define Col 9  //列
+int map[Row][Col];
+
+int main() {
+
+	initgraph(640,480,EW_SHOWCONSOLE);//初設_創作窗口,控制台(flag)
+	
+	getchar(); //防止閃退,出現EasyX視窗
+	return 0;
+}
