@@ -1,0 +1,48 @@
+#include<iostream>
+#include<iomanip>
+#include<ctime>
+#include<easyx.h>
+using namespace std;
+
+#define Row 9  //行
+#define Col 9  //列
+int map[Row][Col];
+void show() //在cmd.exe中顯示格子中代表的數字
+{
+	for (int i = 0; i < Row; i++)
+	{
+		for (int k = 0; k < Col; k++)
+		{
+			cout << setw(3) << map[i][k];
+		}
+		cout << endl;
+	}
+
+}
+void gameInit()
+{
+	//隨機數目雷
+	srand((unsigned)time(NULL));
+	//隨機10個雷,雷用-1表示
+	for (int i = 0; i < 10;)
+	{
+		int r = rand() % Row; //0~10個
+		int c = rand() % Col;
+		//確保一定埋到雷，且不會重複
+		if (map[r][c] == 0)
+		{
+			map[r][c] = -1;
+			i++;
+		}
+		
+	}
+}
+int main() {
+
+	initgraph(640,480,EW_SHOWCONSOLE);//初設_創作窗口,控制台(flag)
+	gameInit();
+	show();
+
+	getchar(); //防止閃退,出現EasyX視窗
+	return 0;
+}

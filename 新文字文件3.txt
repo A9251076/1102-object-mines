@@ -1,0 +1,79 @@
+#include<iostream>
+#include<iomanip>
+#include<ctime>
+#include<easyx.h>
+using namespace std;
+
+#define Row 9  //行
+#define Col 9  //列
+int map[Row][Col];
+void show() //在cmd.exe中顯示格子中代表的數字
+{
+	for (int i = 0; i < Row; i++)
+	{
+		for (int k = 0; k < Col; k++)
+		{
+			cout << setw(3) << map[i][k];
+		}
+		cout << endl;
+	}
+
+}
+void gameInit()
+{
+	//隨機數目雷
+	srand((unsigned)time(NULL));
+	//隨機10個雷,雷用-1表示
+	for (int i = 0; i < 10;)
+	{
+		int r = rand() % Row; //0~10個
+		int c = rand() % Col;
+		//確保一定埋到雷，且不會重複
+		if (map[r][c] == 0)
+		{
+			map[r][c] = -1;
+			i++;
+		}
+		
+	}
+	//添加數字:以雷為中心的九宮格的數字都加1(雷除外)
+	//處理雷周圍的數據
+	for (int i = 0; i < Row; i++)
+	{
+		for (int k = 0; k < Col; k++)
+		{
+			if (map[i][k] == -1)
+			{
+				//找到以雷為中心(i,k)的九宮格
+				//左上角:(i-1,k-1)、右下角:(i+1,k+1)
+				for (int r = i - 1; r <= i + 1; r++)
+				{
+					for (int c = k - 1; c <= k + 1; c++)
+					{
+						if ((r >= 0 && r < Row && c >= 0 && c < Col) //判斷是否在限定的9X9範圍內
+							&& map[r][c] != -1)//排除雷
+						{
+							map[r][c]++;
+						}
+					}
+				}
+			}
+		}
+	}
+	//加載圖片
+	for (int i = 0; i < 12; i++)
+	{
+		char fileName[20] = "";
+		sprintf_s(fileName, "./image/%d.jpg", i);
+		loadimage(img + i, fileName, 40, 40);
+	}
+}
+int main() {
+
+	initgraph(640,480,EW_SHOWCONSOLE);//初設_創作窗口,控制台(flag)
+	gameInit();
+	show();
+
+	getchar(); //防止閃退,出現EasyX視窗
+	return 0;
+}
