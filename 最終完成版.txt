@@ -1,0 +1,260 @@
+#include<iostream>
+#include<iomanip>
+//#include<easyx.h>
+//OR#include<Windows.h>
+#include<ctime>
+#include<graphics.h>
+using namespace std;
+
+#define ROW 10  //行
+#define COL 10  //列
+#define MINE 10 //炸彈
+int map[ROW][COL];
+int flag;//紀錄格子數
+IMAGE img[12]; //所有圖片
+
+void show();//在cmd.exe中顯示格子中代表的數字，可不用加
+void gameInit();//遊戲內部
+void gameDraw();//繪製遊戲內容
+int MouseEvent();//鼠標控制操作
+void OpenNull(int row, int col);//炸空白
+void judge(int map[ROW][COL], int row, int col);//輸贏
+void gameStart();//總結
+
+
+int main() {
+
+	initgraph(ROW * 40, COL * 40, EW_SHOWCONSOLE);//創作窗口,控制台(flag)
+	
+	gameStart();
+
+	getchar(); //防止閃退,出現EasyX視窗
+	return 0;
+}
+
+void show()
+{
+	for (int i = 0; i < ROW; i++)
+	{
+		for (int k = 0; k < COL; k++)
+		{
+			cout << setw(3) << map[i][k];
+		}
+		cout << endl;
+	}
+	cout << endl;
+}
+
+void gameInit()
+{
+	//map清零
+	memset(map, 0, ROW * COL * sizeof(int));
+	flag = 0;//初始化格子數
+	//隨機數目雷
+	srand((unsigned)time(NULL));
+	//隨機10個雷,雷用-1表示
+	for (int i = 0; i < 10;)
+	{
+		int r = rand() % ROW; //0~10個
+		int c = rand() % COL;
+		//確保一定埋到雷，且不會重複
+		if (map[r][c] == 0)
+		{
+			map[r][c] = -1;
+			i++;
+		}
+
+	}
+	//添加數字:以雷為中心的九宮格的數字都加1(雷除外)
+	//處理雷周圍的數據
+	for (int i = 0; i < ROW; i++)
+	{
+		for (int k = 0; k < COL; k++)
+		{
+			if (map[i][k] == -1)
+			{
+				//找到以雷為中心(i,k)的九宮格
+				//左上角:(i-1,k-1)、右下角:(i+1,k+1)
+				for (int r = i - 1; r <= i + 1; r++)
+				{
+					for (int c = k - 1; c <= k + 1; c++)
+					{
+						if ((r >= 0 && r < ROW && c >= 0 && c < COL) //判斷是否在限定的9X9範圍內
+							&& map[r][c] != -1)//排除雷
+						{
+							map[r][c]++;
+						}
+					}
+				}
+			}
+		}
+	}
+	//加載圖片
+	for (int i = 0; i < 12; i++)
+	{
+		char fileName[20] = "";
+		sprintf_s(fileName, "./image/%d.jpg", i);
+		//cout << "./image/" << i<<".jpg";
+		loadimage(img + i, fileName, 40, 40);
+		//putimage(40*i, 0, img);
+	}
+	//遮住數據(數字和雷)
+	for (int i = 0; i < ROW; i++)
+	{
+		for (int k = 0; k < COL; k++)
+		{
+			map[i][k] += 20;	//+=的數字隨意，能有明顯差異即可
+		}
+	}
+}
+
+void gameDraw()
+{
+	for (int i = 0; i < ROW; i++)		//i對應y軸(→)
+	{
+		for (int k = 0; k < COL; k++)	//k對應x軸(↓)
+		{
+			int x = k * 40;
+			int y = i * 40;
+			if (map[i][k] >= 0 && map[i][k] <= 8)	//九宮格中最多8個雷
+			{
+				putimage(x, y, img + map[i][k]);
+			}
+			else if (map[i][k] == -1)
+			{
+				putimage(x, y, img + 9);//第9張圖
+			}
+			else if (map[i][k] >= 19 && map[i][k] <= 28)//遮住圖
+			{
+				putimage(x, y, img + 10);//第10張圖
+			}
+			else if (map[i][k] >= 39)
+			{
+				putimage(x, y, img + 11);//第11張圖
+			}
+		}
+	}
+
+}
+
+int MouseEvent()
+{
+	//獲取鼠標
+	MOUSEMSG msg = GetMouseMsg(); //#include<graphics.h>
+	//
+	int row = msg.y / 40;
+	int col = msg.x / 40;
+	//如果左鍵點擊後還沒有打開，就打開
+	switch (msg.uMsg)
+	{
+	case WM_LBUTTONDOWN://windows_左鍵按下
+		if (map[row][col] >= 19) //+=20 的最小值
+		{
+			map[row][col] -= 20;
+			judge(map, row, col);
+			flag++;//計算點擊的非地雷格子數
+			OpenNull(row, col);
+		}
+		break;
+	case WM_RBUTTONDOWN://右鍵單擊格子,標記，再讓數據+20(覆蓋格子)
+		//已標記
+		if (map[row][col] >= 19 && map[row][col] <= 28)
+		{
+			map[row][col] += 20;
+		}
+		else
+		{
+			map[row][col] -= 20;
+		}
+		break;
+	}
+	return map[row][col];
+
+}
+
+void OpenNull(int row, int col)
+{
+	//如果點到的是空白
+	if (map[row][col] == 0)
+	{
+		for (int i = row - 1; i <= row + 1; i++)
+		{
+			for (int k = col - 1; k <= col + 1; k++)
+			{
+				if ((i >= 0 && i < ROW && k >= 0 && k < COL)
+					&& map[i][k] >= 19)
+				{
+					map[i][k] -= 20;
+					flag++;//計算點擊的非地雷格子數
+					OpenNull(i, k);//swap
+				}
+			}
+		}
+	}
+	
+}
+
+void judge(int mapmap[ROW][COL], int row, int col)
+{
+	
+	gameDraw();//放置圖片
+	//輸了
+	//如果按到雷 GameOver ，點到一個雷，其他雷全炸
+	/*if (map[row][col] == -1)
+	{
+		for (int i = 0; i < ROW; i++)
+		{
+			for (int k = 0; k < COL; k++)
+			{
+				if (map[i][k] == 19)
+				{
+					map[i][k] = -1;
+				}
+			}
+
+		}
+
+	}*/
+
+	if (MouseEvent() == -1)
+	{
+		
+		int ret = MessageBox(GetHWnd(), "你失敗了，是否重來?", " Game Over! ", MB_OKCANCEL);
+		if (ret == IDOK)
+		{
+			gameStart();
+		}
+		else if (ret == IDCANCEL)
+		{
+			exit(0);
+		}
+		
+	}
+
+	//贏了
+	if (flag == ROW * COL - MINE)//總格 - 雷 
+	{
+		
+		int yet = MessageBox(GetHWnd(), "你贏了!", " ", MB_OKCANCEL);
+		if (yet == IDOK)
+		{
+			gameStart();
+		}
+		else
+		{
+			exit(0);
+		}
+	}
+
+}
+
+void gameStart()
+{
+	gameInit();
+	show();
+	while (1)
+	{
+		judge(map, ROW, COL);
+	}
+}
+
