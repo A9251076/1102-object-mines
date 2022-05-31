@@ -1,5 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS 1
-
 #include<iostream>
 #include <ctime>
 #include<iomanip>
@@ -9,7 +7,6 @@ using namespace std;
 #define COL 9
 #define ROWS ROW + 2//為了不讓陣列越界而多設定了兩行兩列的陣列大小
 #define COLS COL + 2
-
 #define BOOM 10//設定為10個雷
 
 class Mine {

@@ -1,5 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS 1
-
 #include "mine.h"
 
 void Mine::gameInit(char map[ROWS][COLS], int rows, int cols, char set)
@@ -94,13 +92,14 @@ static int get_mine_number(char mine[ROWS][COLS], int x, int y)
 
 void Mine::find_mine(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col)
 {
-	int x = 0;
-	int y = 0;
+	int xx;   int& x = xx;
+	int yy;   int& y = yy;
 	int win = 0;
 	while (win < row * col - BOOM)
 	{
-		cout << "請輸入您要查詢的座標:>";
-		scanf("%d %d", &x, &y);
+		cout << "請輸入您要查詢的座標-->";
+		//scanf("%d %d", &x, &y);
+		cin >> x >> y;
 		if ((x >= 1 && x <= row) && (y >= 1 && y <= col))
 		{
 			if (mine[x][y] == '0')
@@ -157,15 +156,17 @@ void Mine::game()
 }
 void Mine::gameStart()
 {
-	int input = 0;
+	int input;
+	int& r = input;
 	do
 	{
 		srand((unsigned int)time(NULL));
 		menu();
 		cout << "請選擇輸入：(1/0)";
-		scanf("%d", &input);
-
-		switch (input)
+		//scanf("%d", &input);
+		cin >> r;
+		
+		switch (r)
 		{
 		case 1:
 			game();
@@ -177,6 +178,6 @@ void Mine::gameStart()
 			cout << "選擇錯誤，請重試\n";
 			break;
 		}
-	} while (input);
+	} while (r);
 }
 
