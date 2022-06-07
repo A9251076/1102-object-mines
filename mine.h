@@ -3,11 +3,15 @@
 #include<iomanip>
 using namespace std;
 
+#ifndef mine_H
+#define mine_H
+
 #define ROW 9//表示棋盤真正的大小
 #define COL 9
 #define ROWS ROW + 2//為了不讓陣列越界而多設定了兩行兩列的陣列大小
 #define COLS COL + 2
 #define BOOM 10//設定為10個雷
+
 
 class Mine {
 public:
@@ -22,10 +26,10 @@ public:
 	void set_mine(char map[ROWS][COLS], int row, int col);
 
 	//計算座標周圍(九宮格)雷個數
-	//static int get_mine_number();
+	static int get_mine_number(char mine[ROWS][COLS], int x, int y);
 
 	//開始排雷
-	void find_mine(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col);
+	void sweeping(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col);
 
 	//是否開始遊戲的菜單
 	void menu();
@@ -34,4 +38,16 @@ public:
 
 	//總結，遊戲開始
 	void gameStart();
+	/*private:
+		int row = 9;
+		int col = 9;
+		int rows = row + 2;
+		int cols = col + 2;
+		int boom = 10;
+		*/
 };
+#endif 
+
+
+
+

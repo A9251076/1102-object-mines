@@ -70,15 +70,16 @@ void Mine::set_mine(char mine[ROWS][COLS], int row, int col)//雷為1
 	{
 		int x = rand() % row + 1; //1-9
 		int y = rand() % col + 1; //1-9
-		if (mine[x][y] == '0')
+		if (mine[x][y] == '0')//用於判斷是否正確的埋雷，只有沒被埋過的雷才自減
 		{
 			mine[x][y] = '1';
 			count--;
 		}
+		
 	}
 }
 
-static int get_mine_number(char mine[ROWS][COLS], int x, int y)
+int Mine::get_mine_number(char mine[ROWS][COLS], int x, int y)
 {
 	return mine[x - 1][y - 1] +
 		mine[x - 1][y] +
@@ -90,7 +91,7 @@ static int get_mine_number(char mine[ROWS][COLS], int x, int y)
 		mine[x + 1][y + 1] - 8 * '0';
 }
 
-void Mine::find_mine(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col)
+void Mine::sweeping(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col)
 {
 	int xx;   int& x = xx;
 	int yy;   int& y = yy;
@@ -98,8 +99,8 @@ void Mine::find_mine(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int 
 	while (win < row * col - BOOM)
 	{
 		cout << "請輸入您要查詢的座標-->";
-		//scanf("%d %d", &x, &y);
 		cin >> x >> y;
+
 		if ((x >= 1 && x <= row) && (y >= 1 && y <= col))
 		{
 			if (mine[x][y] == '0')
@@ -111,19 +112,19 @@ void Mine::find_mine(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int 
 			}
 			else
 			{
-				cout << "抱歉，你被炸死了\n";
+				cout << "抱歉，你被炸死了" << endl;
 				gameDraw(mine, ROW, COL);
 				break;
 			}
 		}
 		else
 		{
-			cout << "座標非法，請重新輸入\n";
+			cout << "座標非法，請重新輸入" << endl;
 		}
 	}
 	if (win == row * col - BOOM)
 	{
-		cout << "恭喜您，排雷成功。\n";
+		cout << "恭喜您，排雷成功。" << endl;
 	}
 }
 
@@ -136,8 +137,8 @@ void Mine::menu()
 }
 void Mine::game()
 {
-	char mine[ROWS][COLS] = { 0 }; //存放雷的資訊
-	char show[ROWS][COLS] = { 0 }; //存放排查鋪的雷的資訊
+	char mine[ROWS][COLS] = { 0 }; //用於埋雷
+	char show[ROWS][COLS] = { 0 }; //用於遊戲的畫面顯示
 
 	//初始化陣列
 	gameInit(mine, ROWS, COLS, '0'); // 0，存放雷的底層棋盤 初始化時全設為 0 
@@ -149,24 +150,23 @@ void Mine::game()
 	//埋雷
 	set_mine(mine, ROW, COL);
 
-	//display_board(mine, ROW, COL);
-
 	//開始排雷
-	find_mine(mine, show, ROW, COL);
+	sweeping(mine, show, ROW, COL);
 }
 void Mine::gameStart()
 {
+	srand((unsigned int)time(NULL));
 	int input;
-	int& r = input;
+	int& reInput = input;
 	do
 	{
-		srand((unsigned int)time(NULL));
+		
 		menu();
 		cout << "請選擇輸入：(1/0)";
-		//scanf("%d", &input);
-		cin >> r;
 		
-		switch (r)
+		cin >> reInput;
+		
+		switch (reInput)
 		{
 		case 1:
 			game();
@@ -178,6 +178,6 @@ void Mine::gameStart()
 			cout << "選擇錯誤，請重試\n";
 			break;
 		}
-	} while (r);
+	} while (reInput);
 }
 
