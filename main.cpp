@@ -11,9 +11,7 @@ void menu()
 
 int main()
 {
-
 	Mine start;
-	//start.gameStart();
 	srand((unsigned int)time(NULL));
 	int input;
 	int& reInput = input;

@@ -3,8 +3,8 @@
 #include<iomanip>
 using namespace std;
 
-#ifndef mine_H
-#define mine_H
+#ifndef Mine_H
+#define Mine_H
 
 #define ROW 9//表示棋盤真正的大小
 #define COL 9
@@ -39,7 +39,6 @@ public:
 		static const int Col = 9;
 		static const int Cols = Col + 2;
 		static const int Boom = 10;
-		
 };
 #endif 
 
