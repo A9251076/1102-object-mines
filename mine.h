@@ -38,6 +38,7 @@ public:
 
 	//總結，遊戲開始
 	void gameStart();
+
 	/*private:
 		int row = 9;
 		int col = 9;

@@ -158,12 +158,10 @@ void Mine::gameStart()
 	srand((unsigned int)time(NULL));
 	int input;
 	int& reInput = input;
+	menu();
 	do
 	{
-		
-		menu();
 		cout << "請選擇輸入：(1/0)";
-		
 		cin >> reInput;
 		
 		switch (reInput)
@@ -172,10 +170,10 @@ void Mine::gameStart()
 			game();
 			break;
 		case 0:
-			cout << "您已退出遊戲\n";
+			cout << "您已退出遊戲" << endl;
 			break;
 		default:
-			cout << "選擇錯誤，請重試\n";
+			cout << "選擇錯誤，請重試" << endl;
 			break;
 		}
 	} while (reInput);
