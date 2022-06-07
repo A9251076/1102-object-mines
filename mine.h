@@ -12,7 +12,6 @@ using namespace std;
 #define COLS COL + 2
 #define BOOM 10//設定為10個雷
 
-
 class Mine {
 public:
 
@@ -31,21 +30,16 @@ public:
 	//開始排雷
 	void sweeping(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int col);
 
-	//是否開始遊戲的菜單
-	void menu();
-
 	void game();
 
-	//總結，遊戲開始
-	void gameStart();
-
-	/*private:
-		int row = 9;
-		int col = 9;
-		int rows = row + 2;
-		int cols = col + 2;
-		int boom = 10;
-		*/
+	
+	private:
+		static const int Row = 9;
+		static const int Rows = Row + 2;
+		static const int Col = 9;
+		static const int Cols = Col + 2;
+		static const int Boom = 10;
+		
 };
 #endif 
 

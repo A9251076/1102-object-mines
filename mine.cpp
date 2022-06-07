@@ -128,13 +128,6 @@ void Mine::sweeping(char mine[ROWS][COLS], char show[ROWS][COLS], int row, int c
 	}
 }
 
-void Mine::menu()
-{
-	cout << "***************************" << endl;
-	cout << "******  1. 開始遊戲  ******" << endl;
-	cout << "******  0.   離開    ******" << endl;
-	cout << "***************************" << endl;
-}
 void Mine::game()
 {
 	char mine[ROWS][COLS] = { 0 }; //用於埋雷
@@ -153,29 +146,5 @@ void Mine::game()
 	//開始排雷
 	sweeping(mine, show, ROW, COL);
 }
-void Mine::gameStart()
-{
-	srand((unsigned int)time(NULL));
-	int input;
-	int& reInput = input;
-	menu();
-	do
-	{
-		cout << "請選擇輸入：(1/0)";
-		cin >> reInput;
-		
-		switch (reInput)
-		{
-		case 1:
-			game();
-			break;
-		case 0:
-			cout << "您已退出遊戲" << endl;
-			break;
-		default:
-			cout << "選擇錯誤，請重試" << endl;
-			break;
-		}
-	} while (reInput);
-}
+
 
